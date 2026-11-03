@@ -163,3 +163,88 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 2 項具體建議。每項需包含：誰來執行 / 做什麼 / 預期成效。
 ```
+
+
+---
+
+## 模組 B：AI 客服「數位乩童」Prompts
+
+### 🔹 Prompt B-1：Google Apps Script BFF 代理腳本生成
+
+```markdown
+請幫我建立一個 Google Apps Script (GAS) 後端中繼代理，充當「數位乩童」AI 客服的 BFF：
+
+要求：
+1. `doPost(e)`：接收前端傳來的 JSON 封包（包含 message, context, imageBase64, sessionId, history）。
+2. 資安防護：使用 `PropertiesService.getScriptProperties().getProperty("OPENROUTER_API_KEY")` 讀取金鑰，絕不在程式碼內寫死 Key。
+3. 呼叫 OpenRouter：呼叫 `https://openrouter.ai/api/v1/chat/completions`，使用 `anthropic/claude-3.5-haiku` 模型。
+4. 多模態支援：若前端傳入 `imageBase64`，自動組裝為 OpenRouter Vision image_url 格式。
+5. 試算表日誌：若設定了 `LOG_SHEET_ID`，透過 `SpreadsheetApp.appendRow()` 自動寫入時間戳記、提問、回答摘要與截圖標記。
+6. 回傳格式：使用 `ContentService.createTextOutput(JSON.stringify(res)).setMimeType(ContentService.MimeType.JSON)` 回傳，避開 CORS 問題。
+7. `doGet(e)`：提供健康檢查端點。
+```
+
+### 🔹 Prompt B-2：前端網頁浮動按鈕與框選截圖功能注入
+
+```markdown
+請在我的網頁右下角注入一個「數位乩童」AI 客服浮動按鈕：
+
+要求：
+1. 外觀：極簡圓角紫藍漸層浮動按鈕（FAB），標題為「數位乩童」，副標題為「請解簽」，帶有綠色在線指示燈與圓形頭像。
+2. 展開視窗：點擊展開現代對話視窗，支援自適應手機與桌面版。
+3. 框選截圖功能：
+   - 提供「📷 畫面框選截圖」按鈕。
+   - 點擊後畫面出現半透明暗色遮罩，游標變成十字準心，允許滑鼠拖曳拉出矩形選區。
+   - 選取放開後，使用 `html2canvas` 針對該座標範圍截圖，轉為 Base64 並自動預覽於輸入框上方。
+4. 請求發送：
+   - 使用 `fetch(gasUrl, { method: 'POST', redirect: 'follow' })` 送往 Google Apps Script Web App。
+   - 正確處理 GAS 產生的 HTTP 302 重定向。
+5. 歷史狀態：維持本地多輪對話歷史，並在畫面上顯示 AI 靈光思考動畫。
+```
+
+---
+
+## 模組 C：Tableau-like Data Atoms 儀表板 Prompts
+
+### 🔹 Prompt C-1：10 大 Data Atoms 自動化儀表板建構
+
+```markdown
+請根據我上傳的資料集，建構一個 Tableau-like 的互動式資料視覺化儀表板：
+
+規格要求：
+1. 界面佈局：
+   - 頂部導覽列：標題、資料來源與 Tableau Prep 智慧欄位分類微調按鈕。
+   - 左側軌道（Shelves）：提供 X 軸、Y 軸、次軸（Secondary）、顏色（Color）、大小（Size）拖曳放置槽。
+   - 中央畫布：使用 Apache ECharts 渲染 60FPS 流暢互動圖表。
+   - 底部 Dock：提供 10 大 Data Atoms 一鍵切換按鈕。
+2. 10 大數據原子支援：
+   - 01 柱狀排行（Bar）、02 時序趨勢（Line）、03 雙軸複合（Dual-Axis）、
+     04 通用地理（Geo 泡泡）、05 盒鬚分佈（Boxplot）、06 矩形樹圖（Treemap）、
+     07 相關散佈（Scatter）、08 甜甜圈佔比（Donut）、09 多維雷達（Radar）、10 轉化路徑（Funnel）。
+3. 跨國地理引擎：
+   - 引入 Universal Geo Engine，自動偵測資料集屬於日本 47 都道府縣、台灣 22 縣市、全球經濟體或美國各州。
+   - 無需外部 GeoJSON 網路請求，本機自帶經緯度座標字典。
+4. 發表級匯出：
+   - 提供「一鍵匯出 1080p 高解析度 PNG」功能，方便放入論文、簡報與報告。
+```
+
+---
+
+## 模組 D：60 秒動態數據短片 Prompts
+
+### 🔹 Prompt D-1：數據短片黃金五段式分鏡腳本生成
+
+```markdown
+你是一位獲獎級商業數據視覺化影片導演。請為我的一組核心商業指標設計一份「60 秒動態短片分鏡腳本」：
+
+結構要求（黃金五段式）：
+1. 00s-05s【Hook 視覺衝突】：提出震撼性問題或反常識數據對比（如「全台 70% 偏鄉空屋，都會房價卻連漲 10 年？」）。
+2. 05s-20s【第一動態：離散體量到趨勢拐點】：柱狀圖升起（Squash & Stretch 動量），柱頭鎖定為折線錨點，展現 5 年時序變化。
+3. 20s-35s【第二動態：相關矩陣與離群點爆發】：折線爆發為散點粒子雲，繪出迴歸趨勢線，標記 3 個異常離群個案。
+4. 35s-50s【第三動態：結構佔比與多維平衡】：粒子收斂為甜甜圈佔比圖，切換至六維雷達圖評估體質。
+5. 50s-60s【CTA 決策收尾】：總結一句話核心洞察，給出具體行動建議。
+
+音效要求：
+- 標註 Earshot 物理打點音效（UI Click、Thock、Sub Hit）。
+- 標註語音旁白出現時的 Auto-Ducking 避讓時間點。
+```
